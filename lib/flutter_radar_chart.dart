@@ -14,6 +14,7 @@ const defaultGraphColors = [
 ];
 
 class RadarChart extends StatefulWidget {
+  final List<String> tickTitles;
   final List<int> ticks;
   final List<String> features;
   final List<List<int>> data;
@@ -27,6 +28,7 @@ class RadarChart extends StatefulWidget {
 
   const RadarChart({
     Key key,
+    this.tickTitles,
     @required this.ticks,
     @required this.features,
     @required this.data,
@@ -40,6 +42,7 @@ class RadarChart extends StatefulWidget {
   }) : super(key: key);
 
   factory RadarChart.light({
+    List<String> tickTitles,
     @required List<int> ticks,
     @required List<String> features,
     @required List<List<int>> data,
@@ -47,6 +50,7 @@ class RadarChart extends StatefulWidget {
     bool useSides = false,
   }) {
     return RadarChart(
+        tickTitles: tickTitles,
         ticks: ticks,
         features: features,
         data: data,
@@ -55,6 +59,7 @@ class RadarChart extends StatefulWidget {
   }
 
   factory RadarChart.dark({
+    List<String> tickTitles,
     @required List<int> ticks,
     @required List<String> features,
     @required List<List<int>> data,
@@ -62,6 +67,7 @@ class RadarChart extends StatefulWidget {
     bool useSides = false,
   }) {
     return RadarChart(
+        tickTitles: tickTitles,
         ticks: ticks,
         features: features,
         data: data,
@@ -114,6 +120,7 @@ class _RadarChartState extends State<RadarChart>
     return CustomPaint(
       size: Size(double.infinity, double.infinity),
       painter: RadarChartPainter(
+          widget.tickTitles,
           widget.ticks,
           widget.features,
           widget.data,
@@ -136,6 +143,7 @@ class _RadarChartState extends State<RadarChart>
 }
 
 class RadarChartPainter extends CustomPainter {
+  final List<String> tickTitles;
   final List<int> ticks;
   final List<String> features;
   final List<List<int>> data;
@@ -149,6 +157,7 @@ class RadarChartPainter extends CustomPainter {
   final double fraction;
 
   RadarChartPainter(
+    this.tickTitles,
     this.ticks,
     this.features,
     this.data,
@@ -216,7 +225,8 @@ class RadarChartPainter extends CustomPainter {
     // Painting the circles and labels for the given ticks (could be auto-generated)
     // The last tick is ignored, since it overlaps with the feature label
     var tickDistance = radius / (ticks.length);
-    var tickLabels = reverseAxis ? ticks.reversed.toList() : ticks;
+    var ticksList = tickTitles != null ? tickTitles : ticks;
+    var tickLabels = reverseAxis ? ticksList.reversed.toList() : ticksList;
 
     if (reverseAxis) {
       TextPainter(
